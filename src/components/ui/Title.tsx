@@ -5,8 +5,7 @@ interface TitleProps {
 }
 const Title: React.FC<TitleProps> = ({ word_1, word_2 }) => {
   return (
-    <div>
-      <div className="font-berkshire relative flex items-center flex-col text-3xl sm:text-4xl text-secondary">
+      <div className="font-berkshire mb-16 relative flex items-center flex-col text-3xl sm:text-4xl text-secondary">
         <h1 className="tracking-wider text-center">
           <span
             style={{ textShadow: "2px 2px #101828" }}
@@ -25,7 +24,6 @@ const Title: React.FC<TitleProps> = ({ word_1, word_2 }) => {
         </h1>
         <img src={underline} alt="underline" className="w-60 absolute top-6" />
       </div>
-    </div>
   );
 };
 

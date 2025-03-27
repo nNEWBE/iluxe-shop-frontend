@@ -13,7 +13,7 @@ const Description: React.FC<DescriptionProps> = ({
   className,
 }) => {
   return (
-    <div className={className}>
+    <div data-aos="zoom-out-right" className={className}>
       <h1 className="sm:text-3xl text-xl font-berkshire">
         {title_1}{" "}
         <span

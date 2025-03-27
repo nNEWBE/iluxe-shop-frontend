@@ -1,7 +1,7 @@
 import React from "react";
 
 interface FooterItem {
-  key: string; 
+  key: string;
   label: string;
 }
 
@@ -12,18 +12,18 @@ interface FooterItemsProps {
 
 const FooterItems: React.FC<FooterItemsProps> = ({ name, items }) => {
   return (
-    <div>
+    <div data-aos="zoom-in-up">
       <h4 className="text-base font-semibold">{name}</h4>
-      <div className="mt-4 space-y-3 text-gray-400 text-sm sm:text-lg">
+      <ul className="mt-4 space-y-3 text-gray-400 text-sm sm:text-lg">
         {items.map((item) => (
-          <p
+          <li
+            className="hover:text-blue-500 w-fit transition cursor-pointer hover:underline"
             key={item.key}
-            className="hover:text-blue-500 transition cursor-pointer hover:underline"
           >
             {item.label}
-          </p>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 };

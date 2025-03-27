@@ -5,12 +5,12 @@ import FooterItems from "./FooterItems";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 font-madimi text-white pt-10 border-t-2 border-primary rounded-xl ">
+    <footer className="bg-secondary overflow-hidden font-madimi text-white pt-10 border-t-2 border-primary rounded-t-xl ">
       <div className="md:px-12 sm:px-10 px-5">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-10 lg:gap-20">
-          <div className="text-center sm:text-left">
+          <div data-aos="zoom-out-right" className="text-center sm:text-left">
             <div className="flex sm:justify-start justify-center">
-              <Logo />
+              <Logo textColor="text-white" />
             </div>
             <p className="mt-4 text-gray-400 text-sm sm:text-lg sm:max-w-lg lg:max-w-md ">
               Explore premium stationery that fuels creativity and enhances your
@@ -18,7 +18,7 @@ const Footer = () => {
             </p>
           </div>
 
-          <div className="w-full lg:w-1/2">
+          <div data-aos="zoom-out-left" className="w-full lg:w-1/2">
             <h3 className="text-lg font-semibold">Stay Updated</h3>
             <p className="text-gray-400 text-sm sm:text-lg mt-1">
               Join our newsletter for exclusive deals and creative inspiration!
@@ -40,7 +40,7 @@ const Footer = () => {
           <FooterItems name="Help" items={items_1} />
           <FooterItems name="Shop" items={items_2} />
 
-          <div>
+          <div data-aos="zoom-in-up">
             <h4 className="text-base font-semibold">Follow Us</h4>
             <div className="mt-4 flex flex-wrap space-x-4">
               {socialIcons.map((item) => (
@@ -54,7 +54,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div>
+          <div data-aos="zoom-in-up">
             <h4 className="text-base font-semibold">Contact</h4>
             <p className="text-gray-400 text-sm sm:text-lg mt-3">
               Email: support@iluxe.com

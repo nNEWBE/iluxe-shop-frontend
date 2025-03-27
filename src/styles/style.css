@@ -31,7 +31,7 @@
   color: white;
 }
 
-.anticon {
+.ant-drawer-header-title button .anticon {
   color: white;
   font-size: 17px;
   border: 2px solid white;
@@ -93,11 +93,109 @@
 
 /*? <-- Accordian --> */
 
-.ant-collapse-header-text{
-  font-family:  Aladin, "system-ui";
+.ant-collapse-header-text {
+  font-family: Aladin, "system-ui";
   font-size: large;
 }
 
-.ant-collapse-content-box{
-  font-family:  Madimi One, "sans-serif";
+.ant-collapse-content-box,
+.ant-select-item-option-content {
+  font-family: Madimi One, "sans-serif";
+}
+
+/*? <-- Toast --> */
+
+[data-sonner-toast][data-styled="true"] {
+  font-family: Madimi One, "sans-serif";
+  color: var(--secondary) !important;
+  padding: 10px 16px !important;
+  width: fit-content !important;
+  border: 2px solid var(--secondary) !important;
+}
+
+/*? Tooltip */
+
+.ant-tooltip .ant-tooltip-inner,
+.ant-tooltip-placement-top > .ant-tooltip-arrow::after {
+  border: 2px solid var(--secondary);
+}
+
+/*? Pagination */
+
+.ant-pagination-item-link .anticon {
+  border: 2px solid var(--secondary);
+  border-radius: 5px;
+  padding: 6.5px;
+  color: white;
+  background: var(--primary);
+}
+
+.ant-pagination-item a {
+  background: #fff;
+  border-radius: 6px;
+}
+
+.ant-layout-content .ant-pagination .ant-pagination-item-link .anticon{
+  border:0px
+}
+
+/*? ANTD Slider */
+
+.ant-layout-sider-trigger .anticon {
+  border: 2px solid var(--primary);
+  padding: 5px 20px;
+  border-radius: 5px;
+  background: var(--primary);
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px auto 0px;
+}
+
+.ant-menu-item {
+  margin-bottom: 2px;
+  background-color: var(--dark);
+}
+
+.ant-layout-sider-trigger {
+  border-top: 2px solid #364153;
+  border-top-right-radius: 12px;
+  border-top-left-radius: 12px;
+}
+
+@media screen and (max-width: 640px) {
+  .ant-layout-sider-trigger {
+    display: none !important;
+  }
+
+  .ant-layout-content .ant-pagination .ant-pagination-item {
+    min-width: 25px;
+    font-family: "Madimi One";
+    margin-right: 4px;
+  }
+}
+
+/*? Table */
+
+.ant-table-container {
+  font-family: "Madimi One";
+  margin-top: 10px;
+}
+
+.ant-dropdown-menu,
+.ant-btn {
+  font-family: "Madimi One";
+}
+.ant-table-pagination .ant-pagination-item {
+  font-family: "Madimi One";
+}
+
+.ant-spin-container .ant-pagination .ant-pagination-item-link .anticon {
+  border: 0px;
+  padding: 4px;
+}
+
+.relative .ant-select-single{
+  height:39px;
 }

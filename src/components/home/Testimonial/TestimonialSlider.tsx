@@ -21,13 +21,14 @@ const TestimonialSlider = () => {
     },
   };
   return (
-    <div className="lg:mt-16 sm:mt-10 mt-3 relative lg:mr-10">
+    <div data-aos="zoom-out-left" className="mt-3 relative lg:mr-10">
       <Swiper
         slidesPerView={1}
         spaceBetween={30}
         loop={true}
         autoplay={{
           delay: 5000,
+          disableOnInteraction: false,
         }}
         pagination={pagination}
         modules={[Autoplay, Pagination]}
