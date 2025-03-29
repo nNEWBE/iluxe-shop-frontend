@@ -9,6 +9,9 @@ import { LuFolders, LuUserRoundPen } from "react-icons/lu";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import { CgFolderAdd } from "react-icons/cg";
 import NavDropDown from "../components/shared/NavBar/NavDropDown";
+import { useCurrentToken } from "../redux/features/auth/authSlice";
+import { useAppSelector } from "../redux/hooks";
+import { verifyToken } from "../utils/verifyToken";
 
 const { Content, Sider } = Layout;
 
@@ -16,67 +19,89 @@ type MenuItem = Required<MenuProps>["items"][number];
 
 function getItem(
   label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[]
+  key: string,
+  icon?: React.ReactNode
 ): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem;
+  return { key, icon, label } as MenuItem;
 }
 
-
-const items: MenuItem[] = [
-  getItem(
-    <Link to={"manage-users"}>Manage Users</Link>,
-    "1",
-    <LuUserRoundPen className="size-5" />
-  ),
-  getItem(
-    <Link to={"manage-products"}>Manage Products</Link>,
-    "2",
-    <LuFolders className="size-5" />
-  ),
-  getItem(
-    <Link to={"manage-orders"}>Manage Orders</Link>,
-    "3",
-    <HiOutlineDocumentReport className="size-5.5" />
-  ),
-  getItem(
-    <Link to={"add-product"}>Add Product</Link>,
-    "4",
-    <CgFolderAdd className="size-4.5" />
-  ),
-];
+export interface userType {
+  exp: number;
+  iat: number;
+  role: "admin" | "user";
+  userId: string;
+}
 
 const DashBoard = () => {
   const [collapsed, setCollapsed] = useState(window.innerWidth <= 640);
-  const location = useLocation(); 
+  const location = useLocation();
+  const token = useAppSelector(useCurrentToken);
+  const user = verifyToken(token as string);
+  const [selectedKey, setSelectedKey] = useState<string>(() => {
+    return localStorage.getItem("selectedKey") || "1"; // Retrieve from localStorage
+  });
 
   useEffect(() => {
     const handleResize = () => {
       setCollapsed(window.innerWidth <= 640);
     };
-
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  let selectedKey = "1"; // Default value in case none of the conditions match
+  useEffect(() => {
+    let key = "1";
 
-  if (location.pathname === "/dashboard/manage-users") {
-    selectedKey = "1";
-  } else if (location.pathname === "/dashboard/manage-products") {
-    selectedKey = "2";
-  } else if (location.pathname === "/dashboard/manage-orders") {
-    selectedKey = "3";
-  } else if (location.pathname === "/dashboard/add-product") {
-    selectedKey = "4";
-  }
+    if (user?.role === "admin") {
+      if (location.pathname.includes("manage-users")) key = "1";
+      else if (location.pathname.includes("manage-products")) key = "2";
+      else if (location.pathname.includes("manage-orders")) key = "3";
+      else if (location.pathname.includes("add-product")) key = "4";
+    } else if (user?.role === "user") {
+      if (location.pathname.includes("view-orders")) key = "1";
+      else if (location.pathname.includes("manage-profile")) key = "2";
+    }
 
+    setSelectedKey(key);
+    localStorage.setItem("selectedKey", key);
+  }, [location.pathname, user?.role]);
+
+  const items: MenuItem[] =
+    user?.role === "admin"
+      ? [
+          getItem(
+            <Link to="manage-users">Manage Users</Link>,
+            "1",
+            <LuUserRoundPen className="size-5" />
+          ),
+          getItem(
+            <Link to="manage-products">Manage Products</Link>,
+            "2",
+            <LuFolders className="size-5" />
+          ),
+          getItem(
+            <Link to="manage-orders">Manage Orders</Link>,
+            "3",
+            <HiOutlineDocumentReport className="size-5.5" />
+          ),
+          getItem(
+            <Link to="add-product">Add Product</Link>,
+            "4",
+            <CgFolderAdd className="size-4.5" />
+          ),
+        ]
+      : [
+          getItem(
+            <Link to="view-orders">View Orders</Link>,
+            "1",
+            <HiOutlineDocumentReport className="size-5" />
+          ),
+          getItem(
+            <Link to="manage-profile">Manage Profile</Link>,
+            "2",
+            <LuUserRoundPen className="size-5" />
+          ),
+        ];
 
   return (
     <ConfigProvider
@@ -125,7 +150,7 @@ const DashBoard = () => {
               top: "95px",
             }}
             theme="dark"
-            defaultSelectedKeys={[selectedKey]}
+            selectedKeys={[selectedKey]}
             mode="inline"
             items={items}
           />
@@ -133,7 +158,7 @@ const DashBoard = () => {
         <Layout>
           <div className="flex border-b-2 border-b-secondary shadow-xl justify-between items-center bg-gray-300 py-5 sm:px-5 px-3">
             <h1 className="font-berkshire text-lg sm:text-2xl">
-              User Dashboard
+              {user.role.charAt(0).toUpperCase() + user.role.slice(1)} Dashboard
             </h1>
             <NavDropDown />
           </div>

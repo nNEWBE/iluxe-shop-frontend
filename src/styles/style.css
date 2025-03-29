@@ -199,3 +199,12 @@
 .relative .ant-select-single{
   height:39px;
 }
+
+/*? Modal Icon */
+
+.ant-modal-close-x .anticon{
+  border-radius: 5px;
+  padding: 5px;
+  color: #ffffff;
+  background: var(--primary);
+}

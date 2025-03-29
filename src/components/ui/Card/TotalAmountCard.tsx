@@ -2,10 +2,13 @@ import { MdOutlinePayment } from "react-icons/md";
 import Button from "../Button";
 import { useCreateOrderMutation } from "../../../redux/api/order/orderApi";
 import { IcartItem, placeOrder } from "../../../redux/features/cart/cartSlice";
-import { useAppDispatch } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { toast } from "sonner";
 import { ApiError } from "../../../error/error";
 import { setCounter } from "../../../redux/features/counter/counterSlice";
+import { useCurrentToken } from "../../../redux/features/auth/authSlice";
+import { useGetMeQuery } from "../../../redux/api/user/userApi";
+import { useNavigate } from "react-router-dom";
 
 interface ITotalAmountCard {
   totalPrice: number;
@@ -13,28 +16,61 @@ interface ITotalAmountCard {
   orderData: IcartItem[];
 }
 
+export interface IUser {
+  _id: string;
+  name: string;
+  email: string;
+  password: string;
+  role: "admin" | "user";
+  phone?: string;
+  address?: string;
+  city?: string;
+  isBlocked: boolean;
+}
+
 const TotalAmountCard: React.FC<ITotalAmountCard> = ({
   totalPrice,
   totalQuantity,
   orderData,
 }) => {
+  const token = useAppSelector(useCurrentToken);
+  const { data } = useGetMeQuery(token);
+  const userData: IUser = data?.data;
+  const userId = userData?._id;
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [createOrder] = useCreateOrderMutation();
-  console.log(orderData);
   const handlePlaceOrder = async () => {
-    const toastId = toast.loading("Placing order...");
+    if (userData?.role === "admin") {
+      return toast.error("You are not allowed to place an order", {
+        duration: 2000,
+      });
+    }
+    if (
+      userData?.address === "N/A" ||
+      userData?.city === "N/A" ||
+      userData?.phone === "N/A"
+    ) {
+      toast.error("Please update your profile", { duration: 2000 });
+      navigate("user/dashboard/manage-profile");
+      return;
+    }
 
+    const toastId = toast.loading("Placing order");
+    const createOrderData = {
+      user: userId,
+      products: orderData.map((item) => ({
+        product: item.product,
+        quantity: item.quantity,
+      })),
+      totalPrice,
+    };
     try {
-      await Promise.all(
-        orderData.map(async (item) => {
-          const createOrderData = {
-            email: item?.email,
-            product: item?.product,
-            quantity: item?.quantity,
-          };
-          await createOrder(createOrderData).unwrap();
-        })
-      );
+      const response = await createOrder({data:createOrderData,token}).unwrap();
+      console.log("🚀 ~ handlePlaceOrder ~ response:", response);
+      if (response?.data) {
+        window.location.href = response?.data;
+      }
 
       dispatch(setCounter(1));
       dispatch(placeOrder());

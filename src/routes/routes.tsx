@@ -13,6 +13,10 @@ import ManageOrders from "../pages/ManageOrders";
 import ManageUsers from "../pages/ManageUsers";
 import ManageProducts from "../pages/ManageProducts";
 import AddProduct from "../pages/AddProduct";
+import ViewOrders from "../pages/ViewOrders";
+import ManageProfile from "../pages/ManageProfile";
+import DashboardProtectedRoute from "../security/DashboardProtectedRoute";
+import VerifyOrder from "../pages/VerifyOrder";
 
 const router = createBrowserRouter([
   {
@@ -53,37 +57,76 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/verify-order",
+        element: (
+          <ProtectedRoute>
+            <VerifyOrder />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: "/about",
         element: <About />,
       },
     ],
   },
   {
-    path: "/dashboard",
+    path: "/admin/dashboard",
     element: (
       <>
         <ScrollToTop />
-        <DashBoard />
+        <DashboardProtectedRoute role="admin">
+          <DashBoard />
+        </DashboardProtectedRoute>
       </>
     ),
-    children:[
+    children: [
       {
-        path:"manage-users",
-        element:<ManageUsers/>
+        index: true,
+        element: <ManageUsers />,
       },
       {
-        path:"manage-products",
-        element:<ManageProducts/>
+        path: "manage-users",
+        element: <ManageUsers />,
       },
       {
-        path:"manage-orders",
-        element:<ManageOrders/>
+        path: "manage-products",
+        element: <ManageProducts />,
       },
       {
-        path:"add-product",
-        element:<AddProduct/>
-      }
-    ]
+        path: "manage-orders",
+        element: <ManageOrders />,
+      },
+      {
+        path: "add-product",
+        element: <AddProduct />,
+      },
+    ],
+  },
+  {
+    path: "/user/dashboard",
+    element: (
+      <>
+        <ScrollToTop />
+        <DashboardProtectedRoute role="user">
+          <DashBoard />
+        </DashboardProtectedRoute>
+      </>
+    ),
+    children: [
+      {
+        index: true,
+        element: <ViewOrders />,
+      },
+      {
+        path: "view-orders",
+        element: <ViewOrders />,
+      },
+      {
+        path: "manage-profile",
+        element: <ManageProfile />,
+      },
+    ],
   },
 ]);
 

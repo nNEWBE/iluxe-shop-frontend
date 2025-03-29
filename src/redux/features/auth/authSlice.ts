@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 
 export type TUser = {
+    userName: string;
     userId: string;
     role: string;
     iat: number;
@@ -9,17 +10,20 @@ export type TUser = {
 };
 
 export type TDefaultUser = {
+    name: string;
     email: string;
     password: string;
 };
 
 type TAuthState = {
+    name: null | string;
     user: null | TUser;
     token: null | string;
     defaultUser?: null | TDefaultUser;
 };
 
 const initialState: TAuthState = {
+    name: null,
     user: null,
     token: null,
     defaultUser: null
@@ -30,11 +34,13 @@ export const authSlice = createSlice({
     initialState,
     reducers: {
         setUser: (state, action) => {
-            const { user, token } = action.payload;
+            const { name, user, token } = action.payload;
+            state.name = name;
             state.user = user;
             state.token = token;
         },
         logoutUser: (state) => {
+            state.name = null;
             state.user = null;
             state.token = null;
             state.defaultUser = null;

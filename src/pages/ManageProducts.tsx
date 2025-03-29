@@ -3,17 +3,19 @@ import { ConfigProvider, Dropdown, Pagination, Space, Tag } from "antd";
 import type { MenuProps, TableColumnsType } from "antd";
 import { Product } from "../components/shared/NavBar/NavUtils";
 import { categoryOptions } from "../components/ui/Filter/FilterUtils";
-import { useGetAllProductsQuery } from "../redux/api/product/productApi";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import {
-  selectParams,
-  setParams,
-} from "../redux/features/filter/filterSlice";
+  useDeleteProductMutation,
+  useGetAllProductsQuery,
+} from "../redux/api/product/productApi";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { selectParams, setParams } from "../redux/features/filter/filterSlice";
 import { Link } from "react-router-dom";
 import TableProvider from "../components/ui/Table/Table";
+import { toast } from "sonner";
+import { ApiError } from "../error/error";
 
 interface DataType {
-  _id:string
+  _id: string;
   key: React.Key;
   productImage: string;
   name: string;
@@ -25,12 +27,36 @@ interface DataType {
 const ManageProducts: React.FC = () => {
   const params = useAppSelector(selectParams);
   const dispatch = useAppDispatch();
-
+  const [deleteProduct] = useDeleteProductMutation(undefined);
   const { data, isFetching } = useGetAllProductsQuery(params);
   const cardData: Product[] = data?.data?.result;
   const metaData = data?.data?.meta;
   const currentPage = parseInt(params.page) || 1;
 
+  const handleDelete = async (id: string) => {
+    const toastId = toast.loading("Product deleting");
+    try {
+      await deleteProduct(id);
+      toast.success("Product deleted successfully", {
+        id: toastId,
+        duration: 2000,
+      });
+    } catch (error: unknown) {
+      if (typeof error === "object" && error !== null && "data" in error) {
+        const apiError = error as ApiError;
+        toast.error(
+          apiError?.data?.error?.details?.[0]?.message ||
+            "Something went wrong",
+          {
+            id: toastId,
+            duration: 2000,
+          }
+        );
+      } else {
+        toast.error("Something went wrong", { id: toastId, duration: 2000 });
+      }
+    }
+  };
 
   const handleFilterChange = (key: string, value: string) => {
     dispatch(setParams([{ key, value }]));
@@ -104,9 +130,11 @@ const ManageProducts: React.FC = () => {
             label: <Link to={`/product/${record._id}`}>Details</Link>,
           },
           { type: "divider" },
-          { key: "2", label: "Update" },
           { type: "divider" },
-          { key: "3", label: "Delete" },
+          {
+            key: "2",
+            label: <p onClick={() => handleDelete(record._id)}>Delete</p>,
+          },
         ];
 
         return (
@@ -121,8 +149,8 @@ const ManageProducts: React.FC = () => {
   ];
 
   const productData: DataType[] = cardData?.map(
-    ({ _id,productImage, name, category, price, inStock }, index) => ({
-      _id:_id,
+    ({ _id, productImage, name, category, price, inStock }, index) => ({
+      _id: _id,
       key: index + 1,
       productImage,
       name,
@@ -133,33 +161,32 @@ const ManageProducts: React.FC = () => {
   );
 
   return (
-      <TableProvider<DataType>
-        isFetching={isFetching}
-        columnsData={columns}
-        data={productData}
-      >
-        <div className="flex justify-end my-2">
-          <ConfigProvider
-            theme={{
-              token: {
-                fontFamily: "Madimi One",
-              },
+    <TableProvider<DataType>
+      isFetching={isFetching}
+      columnsData={columns}
+      data={productData}
+    >
+      <div className="flex justify-end my-2">
+        <ConfigProvider
+          theme={{
+            token: {
+              fontFamily: "Madimi One",
+            },
+          }}
+        >
+          <Pagination
+            pageSize={6}
+            current={currentPage}
+            defaultCurrent={1}
+            total={metaData?.total || 0}
+            onChange={(page) => {
+              handleFilterChange("page", `${page}`);
             }}
-          >
-            <Pagination
-              pageSize={6}
-              current={currentPage}
-              defaultCurrent={1}
-              total={metaData?.total || 0}
-              onChange={(page) => {
-                handleFilterChange("page", `${page}`);
-              }}
-            />
-          </ConfigProvider>
-        </div>
-      </TableProvider>
+          />
+        </ConfigProvider>
+      </div>
+    </TableProvider>
   );
-            
 };
 
 export default ManageProducts;

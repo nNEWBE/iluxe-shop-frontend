@@ -42,13 +42,42 @@ export type Product = {
   updatedAt: string;
 };
 
-export type Order = {
+export interface ITransaction {
+  id: string;
+  transactionStatus: string | null;
+  bank_status: "Success" | "Cancel" | "Failed";
+  date_time: string;
+  method: string;
+  sp_code: string;
+  sp_message: string;
+}
+
+export interface IUser {
   _id: string;
-  product:Product;
-  quantity: number;
-  status: "Pending" | "Shipping";
-  totalPrice: number;
-  updatedAt: Date;
-  createdAt: Date;
+  name: string;
   email: string;
-};
+}
+
+export interface IProduct {
+  _id: string;
+  name: string;
+  price: number;
+}
+
+export interface IOrderProduct {
+  product: IProduct;
+  quantity: number;
+  _id: string;
+}
+
+export interface IOrder {
+  _id: string;
+  user: IUser;
+  products: IOrderProduct[];
+  totalPrice: number;
+  status: "Pending" | "Paid" | "Shipped" | "Completed" | "Cancelled";
+  transaction: ITransaction;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}

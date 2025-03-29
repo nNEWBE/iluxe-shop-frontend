@@ -1,9 +1,14 @@
 import React from "react";
 import { ConfigProvider, Dropdown, Space, Tag } from "antd";
 import type { MenuProps, TableColumnsType } from "antd";
-import { useGetAllUsersQuery } from "../redux/api/user/userApi";
+import {
+  useBlockUserMutation,
+  useGetAllUsersQuery,
+} from "../redux/api/user/userApi";
 import { Author } from "../components/home/FeaturedProducts/FeaturedProducts.types";
 import TableProvider from "../components/ui/Table/Table";
+import { toast } from "sonner";
+import { ApiError } from "../error/error";
 
 interface DataType {
   _id: string;
@@ -15,9 +20,59 @@ interface DataType {
 }
 
 const ManageUsers: React.FC = () => {
-
   const { data, isFetching } = useGetAllUsersQuery(undefined);
+  const [blockUser] = useBlockUserMutation();
   const user: Author[] = data?.data;
+
+  const handleUnblock = async (id: string) => {
+    const toastId = toast.loading("User unblocking");
+    try {
+      await blockUser({ id, isBlocked: false });
+      toast.success("User unblocked successfully", {
+        id: toastId,
+        duration: 2000,
+      });
+    } catch (error: unknown) {
+      if (typeof error === "object" && error !== null && "data" in error) {
+        const apiError = error as ApiError;
+        toast.error(
+          apiError?.data?.error?.details?.[0]?.message ||
+            "Something went wrong",
+          {
+            id: toastId,
+            duration: 2000,
+          }
+        );
+      } else {
+        toast.error("Something went wrong", { id: toastId, duration: 2000 });
+      }
+    }
+  };
+
+  const handleBlock = async (id: string) => {
+    const toastId = toast.loading("User blocking");
+    try {
+      await blockUser({ id, isBlocked: true });
+      toast.success("User blocked successfully", {
+        id: toastId,
+        duration: 2000,
+      });
+    } catch (error: unknown) {
+      if (typeof error === "object" && error !== null && "data" in error) {
+        const apiError = error as ApiError;
+        toast.error(
+          apiError?.data?.error?.details?.[0]?.message ||
+            "Something went wrong",
+          {
+            id: toastId,
+            duration: 2000,
+          }
+        );
+      } else {
+        toast.error("Something went wrong", { id: toastId, duration: 2000 });
+      }
+    }
+  };
 
   const columns: TableColumnsType<DataType> = [
     {
@@ -39,7 +94,7 @@ const ManageUsers: React.FC = () => {
     },
     {
       title: "Status",
-      dataIndex: "inStock",
+      dataIndex: "isBlocked",
       filters: [
         { text: "Blocked", value: "true" },
         { text: "Unblocked", value: "false" },
@@ -54,7 +109,7 @@ const ManageUsers: React.FC = () => {
           }}
         >
           <Tag color={item ? "volcano" : "blue"}>
-            {item ? "Blocked" : "Unblocked"}
+            {item ? "Blocked" : "Active"}
           </Tag>
         </ConfigProvider>
       ),
@@ -62,14 +117,17 @@ const ManageUsers: React.FC = () => {
     {
       title: "Action",
       key: "operation",
-      render: () => {
+      render: (_, record) => {
         const items: MenuProps["items"] = [
-          {
-            key: "1",
-            label: "Block",
-          },
-          { type: "divider" },
-          { key: "2", label: "Unblock" },
+          record.isBlocked
+            ? {
+                key: "1",
+                label: <p onClick={() => handleUnblock(record._id)}>Unblock</p>,
+              }
+            : {
+                key: "1",
+                label: <p onClick={() => handleBlock(record._id)}>Block</p>,
+              },
         ];
 
         return (

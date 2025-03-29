@@ -3,15 +3,30 @@ import { baseApi } from "../baseApi";
 export const orderApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         createOrder: builder.mutation({
-            query: (data) => ({
+            query: ({data,token}) => ({
                 url: '/orders/create-order',
                 method: 'POST',
                 body: data,
+                headers: {
+                    Authorization: token,
+                }
             }),
             invalidatesTags: ['Order','Product']
         }),
+        verifyOrder: builder.query({
+            query: (order_id) => ({
+                url: "/orders/verify",
+                params: { order_id },
+                method: "GET",
+            }),
+            providesTags: ['Order'],
+        }),
         getAllOrders: builder.query({
             query: () => '/orders',
+            providesTags: ['Order'],
+        }),
+        getSingleUserOrders: builder.query({
+            query: ({ user_id }) => `/orders/user-orders/${user_id}`,
             providesTags: ['Order'],
         }),
         calculateRevenue: builder.query({
@@ -38,7 +53,9 @@ export const orderApi = baseApi.injectEndpoints({
 
 export const {
     useCreateOrderMutation,
+    useVerifyOrderQuery,
     useGetAllOrdersQuery,
+    useGetSingleUserOrdersQuery,
     useCalculateRevenueQuery,
     useUpdateOrderStatusMutation,
     useDeleteOrderMutation

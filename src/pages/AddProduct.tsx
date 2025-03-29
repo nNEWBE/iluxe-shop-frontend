@@ -31,9 +31,9 @@ export type Product = {
 
 const AddProduct: React.FC = () => {
   const token = useAppSelector(useCurrentToken);
-  const [createProduct] = useCreateProductMutation();
   const { data } = useGetMeQuery(token);
   const userId = data?.data?._id;
+  const [createProduct] = useCreateProductMutation();
   const {
     register,
     handleSubmit,
