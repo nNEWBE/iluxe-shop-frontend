@@ -152,14 +152,3 @@ App runs at `http://localhost:5173`
 1. Ensure the backend is deployed.
 2. Set environment variables.
 3. Deploy using **Vercel**, **Netlify**, or **Heroku**.
-
-## 💡 Contributing
-1. Fork the repo.
-2. Create a branch: `git checkout -b feature-branch`
-3. Commit changes: `git commit -m 'Add feature'`
-4. Push branch: `git push origin feature-branch`
-5. Open a pull request.
-
----
-Let me know if you'd like additional modifications! 🚀
-
