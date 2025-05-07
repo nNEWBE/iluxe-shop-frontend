@@ -1,5 +1,3 @@
-"use client";
-
 import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../components/ui/Button";
 import { IoLogIn } from "react-icons/io5";

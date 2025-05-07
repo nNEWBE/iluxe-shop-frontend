@@ -25,7 +25,7 @@ const Filter: React.FC<FilterProps> = ({ isFilterOpen, isFullyHidden,setIsFilter
             }
             md:opacity-100 md:max-h-[400px] md:overflow-visible lg:sticky top-32`}
     >
-      <div className="w-80 sm:w-[41rem] lg:w-64 rounded-xl border-2 border-secondary bg-secondary lg:h-[25rem] sm:h-[14rem] h-[25rem] flex items-center mx-5 md:mx-0">
+      <div className="w-80 sm:w-[41rem] lg:w-64 rounded-xl border-2 border-secondary bg-secondary lg:h-[27rem] sm:h-[14rem] h-[27rem] flex items-center mx-5 md:mx-0">
         <div className="w-full flex flex-col sm:flex-row lg:flex-col bg-white rounded-xl h-[calc(100%-20px)]">
           <div className="w-full">
             <h3 className="text-center py-3 lg:w-[250px] rounded-t-xl font-berkshire text-secondary text-2xl">

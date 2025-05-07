@@ -130,7 +130,6 @@ const ManageProducts: React.FC = () => {
             label: <Link to={`/product/${record._id}`}>Details</Link>,
           },
           { type: "divider" },
-          { type: "divider" },
           {
             key: "2",
             label: <p onClick={() => handleDelete(record._id)}>Delete</p>,
