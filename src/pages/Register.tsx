@@ -1,7 +1,7 @@
 "use client";
 
 import { useNavigate } from "react-router-dom";
-import Button from "../components/ui/Button";
+import Button from "../components/ui/UiButton";
 import { IoLogIn } from "react-icons/io5";
 import Input from "../components/ui/Input/Input";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
@@ -28,7 +28,7 @@ const Register = () => {
     const defaultUserInfo = { email: data?.email, password: data?.password };
     try {
       await registerUser(data).unwrap();
-      dispatch(setUserAfterRegister({userInfo:defaultUserInfo}));
+      dispatch(setUserAfterRegister({ userInfo: defaultUserInfo }));
       toast.success("Registered successfully", { id: toastId, duration: 2000 });
       navigate("/login");
     } catch (error: unknown) {

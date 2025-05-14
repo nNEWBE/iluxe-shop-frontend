@@ -3,7 +3,7 @@ import { useVerifyOrderQuery } from "../redux/api/order/orderApi";
 import { ConfigProvider, Tag } from "antd";
 import { AlertCircle, CheckCircle } from "lucide-react";
 import Title from "../components/ui/Title";
-import Button from "../components/ui/Button";
+import Button from "../components/ui/UiButton";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import { RiHome9Line } from "react-icons/ri";
 import VerifyOrderSkeleton from "../components/ui/Skeleton/VerifyOrderSkeleton";

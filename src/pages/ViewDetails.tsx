@@ -1,30 +1,40 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetProductByIdQuery } from "../redux/api/product/productApi";
 import Title from "../components/ui/Title";
 import "react-loading-skeleton/dist/skeleton.css";
-import Button from "../components/ui/Button";
+import Button from "../components/ui/UiButton";
 import { FaShoppingCart } from "react-icons/fa";
 import { IoFlash } from "react-icons/io5";
 import { FaTags } from "react-icons/fa6";
 import { BiSolidCategory } from "react-icons/bi";
 import ViewDetailsSkeleton from "../components/ui/Skeleton/ViewDetailsSkeleton";
-import { addToCart, selectCartItemQuantity } from "../redux/features/cart/cartSlice";
+import {
+  addToCart,
+  selectCartItemQuantity,
+} from "../redux/features/cart/cartSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { toast } from "sonner";
 import { selectCurrentUser } from "../redux/features/auth/authSlice";
 import { openDrawer } from "../redux/features/drawer/drawerSlice";
+import ISCarousel from "@/components/ui/ISCarousel";
+import { Rate } from "antd";
 
 const ViewDetails = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetProductByIdQuery(id as string);
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectCurrentUser);
+  const navigate = useNavigate();
   const product = data?.data;
   const itemsQuantity = useAppSelector((state) =>
-      selectCartItemQuantity(state, product?._id)
-    );
+    selectCartItemQuantity(state, product?._id)
+  );
 
   const handleAddToCart = () => {
+    if (!user) {
+      navigate("/login");
+      return toast.error("Please login first");
+    }
     try {
       if (product?.quantity < itemsQuantity + 1) {
         return toast.error("Insufficient stock");
@@ -35,7 +45,7 @@ const ViewDetails = () => {
         price: product?.price,
         quantity: 1,
         stock: product?.quantity,
-        image: product?.productImage,
+        image: product?.productImages[0],
         email: user?.userId,
       };
       dispatch(addToCart(orderData));
@@ -45,7 +55,7 @@ const ViewDetails = () => {
       toast.error("Something went wrong");
     }
   };
-  
+
   return (
     <div className="my-10 mx-auto max-w-4xl px-4">
       <Title word_1="Product" word_2="Details" />
@@ -53,14 +63,10 @@ const ViewDetails = () => {
       {isLoading ? (
         <ViewDetailsSkeleton />
       ) : product ? (
-        <div className="mt-10 flex flex-col md:flex-row gap-10 bg-white shadow-lg p-3 sm:p-6 rounded-lg border-2 border-secondary">
+        <div className="mt-10 flex flex-col md:flex-row gap-10 bg-white p-3 sm:p-6 rounded-lg border border-gray-300">
           <div className="w-full relative md:w-1/2">
-            <img
-              src={product?.productImage}
-              alt={product?.name}
-              className="w-full max-h-[15rem] md:max-h-full  h-full border-2 border-secondary object-cover rounded-lg"
-            />
-            <div className="absolute top-2 right-2">
+            <ISCarousel images={product?.productImages} />
+            <div className="absolute top-2 right-2 z-10">
               <Button varient="tag" text={product?.brand} icon={<FaTags />} />
             </div>
           </div>
@@ -92,16 +98,28 @@ const ViewDetails = () => {
                 product?.inStock ? "text-green-600" : "text-red-600"
               }`}
             >
-              {product?.inStock ? `${product?.quantity} Left In Stock` : "Out of Stock"}
+              {product?.inStock
+                ? `${product?.quantity} Left In Stock`
+                : "Out of Stock"}
             </p>
+            <Rate
+              style={{ fontSize: "17px", color: "#eaa300" }}
+              allowHalf
+              disabled
+              defaultValue={product?.rating}
+            />
             <div className="flex items-center gap-1 text-lg text-gray-600">
               <BiSolidCategory />
               <p>{product?.category}</p>
             </div>
-            <div className="mt-4 p-4 border-2 border-secondary bg-gray-100 rounded-lg">
+            <div className="mt-4 p-4 border border-gray-300 bg-gray-100 rounded-lg">
               <h3 className="font-semibold text-gray-700">Seller Info:</h3>
-              <p className="text-gray-600">Name: {product?.author?.name || "N/A"}</p>
-              <p className="text-gray-600">Email: {product?.author?.email || "N/A"}</p>
+              <p className="text-gray-600">
+                Name: {product?.author?.name || "N/A"}
+              </p>
+              <p className="text-gray-600">
+                Email: {product?.author?.email || "N/A"}
+              </p>
               <p className="text-gray-600">
                 Role: {product?.author?.role || "N/A"}{" "}
                 {product?.author?.isBlocked && "(Blocked)"}
@@ -109,8 +127,17 @@ const ViewDetails = () => {
             </div>
 
             <div className="mt-5 flex flex-wrap gap-4">
-              <Button onClick={handleAddToCart} text="Add to Cart" icon={<FaShoppingCart />} />
-              <Button onClick={()=>dispatch(openDrawer())} type="secondary" text="Buy Now" icon={<IoFlash />} />
+              <Button
+                onClick={handleAddToCart}
+                text="Add to Cart"
+                icon={<FaShoppingCart />}
+              />
+              <Button
+                onClick={() => dispatch(openDrawer())}
+                type="secondary"
+                text="Buy Now"
+                icon={<IoFlash />}
+              />
             </div>
           </div>
         </div>

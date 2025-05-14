@@ -1,5 +1,5 @@
 import { MdOutlinePayment } from "react-icons/md";
-import Button from "../Button";
+import Button from "../UiButton";
 import { useCreateOrderMutation } from "../../../redux/api/order/orderApi";
 import { IcartItem, placeOrder } from "../../../redux/features/cart/cartSlice";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
@@ -66,7 +66,10 @@ const TotalAmountCard: React.FC<ITotalAmountCard> = ({
       totalPrice,
     };
     try {
-      const response = await createOrder({data:createOrderData,token}).unwrap();
+      const response = await createOrder({
+        data: createOrderData,
+        token,
+      }).unwrap();
       console.log("🚀 ~ handlePlaceOrder ~ response:", response);
       if (response?.data) {
         window.location.href = response?.data;

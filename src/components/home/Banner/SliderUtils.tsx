@@ -1,7 +1,7 @@
 export const images = [
   {
     key: 1,
-    img: "https://res.cloudinary.com/dorjgyfdl/image/upload/v1741114341/Image_01_it6ndx.jpg",
+    img: "https://res.cloudinary.com/dorjgyfdl/image/upload/v1746931034/Image_01_mwqdao.jpg",
   },
   {
     key: 2,

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import Input from "../components/ui/Input/Input";
 import Title from "../components/ui/Title";
@@ -12,6 +12,8 @@ import { useGetMeQuery } from "../redux/api/user/userApi";
 import { useCreateProductMutation } from "../redux/api/product/productApi";
 import { toast } from "sonner";
 import { ApiError } from "../error/error";
+import ISImagePreviewer from "../components/ui/ImageUpload/ISImagePreviwer";
+import { useNavigate } from "react-router-dom";
 
 export type Product = {
   _id: string;
@@ -24,12 +26,15 @@ export type Product = {
   inStock: boolean;
   quantity: number;
   rating: number;
-  productImage: string;
+  productImages: string[];
   createdAt: string;
   updatedAt: string;
 };
 
 const AddProduct: React.FC = () => {
+  const [imageFiles, setImageFiles] = useState<File[] | []>([]);
+  const [imagePreview, setImagePreview] = useState<string[] | []>([]);
+  const navigate =useNavigate();
   const token = useAppSelector(useCurrentToken);
   const { data } = useGetMeQuery(token);
   const userId = data?.data?._id;
@@ -45,7 +50,7 @@ const AddProduct: React.FC = () => {
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const formData = new FormData();
 
-    const { productImage, price, quantity, rating, ...restData } = data;
+    const { price, quantity, rating, ...restData } = data;
 
     const productData = {
       price: parseFloat(price),
@@ -54,16 +59,20 @@ const AddProduct: React.FC = () => {
       ...restData,
       author: userId,
     };
+    console.log("🚀 ~ constonSubmit:SubmitHandler<FieldValues>= ~ productData:", productData)
 
     formData.append("data", JSON.stringify(productData));
-    formData.append("file", productImage);
-    const toastId = toast.loading("Product creating in");
+    for (const file of imageFiles) {
+      formData.append("images", file);
+    }
+    const toastId = toast.loading("Product creating in ...");
     try {
       await createProduct({ data: formData, token }).unwrap();
       toast.success("Product created successfully", {
         id: toastId,
         duration: 2000,
       });
+      navigate("/admin/dashboard/manage-products");
       reset();
     } catch (error: unknown) {
       if (typeof error === "object" && error !== null && "data" in error) {
@@ -83,7 +92,7 @@ const AddProduct: React.FC = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-8 my-10 bg-white shadow-lg rounded-xl border border-gray-200">
+    <div className="mx-auto sm:p-8 p-5 my-2.5 bg-white rounded-xl border border-gray-200">
       <Title word_1="Add" word_2="Product" />
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 font-madimi">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -105,20 +114,40 @@ const AddProduct: React.FC = () => {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FileInput
-            label="Image"
-            name="productImage"
-            control={control}
-            errors={errors?.productImage?.message as string}
-          />
+        <div className="grid grid-cols-1">
+          <div className="flex gap-4 ">
+            <FileInput
+              setImageFiles={setImageFiles}
+              setImagePreview={setImagePreview}
+              label="Images"
+              name="productImages"
+              control={control}
+              errors={errors?.productImage?.message as string}
+            />
+            <ISImagePreviewer
+              className="flex flex-wrap gap-4 mt-6"
+              setImageFiles={setImageFiles}
+              imagePreview={imagePreview}
+              setImagePreview={setImagePreview}
+            />
+          </div>
+        </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <SelectInput
             label="Category"
             name="category"
             control={control}
             options={categoryOptions}
             errors={errors?.category?.message as string}
+          />
+          <Input
+            label="Price"
+            type="text"
+            errors={errors?.price?.message as string}
+            register={register("price", {
+              required: { value: true, message: "Enter product price" },
+            })}
           />
         </div>
 
@@ -132,18 +161,10 @@ const AddProduct: React.FC = () => {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Input
-            label="Price"
-            type="number"
-            errors={errors?.price?.message as string}
-            register={register("price", {
-              required: { value: true, message: "Enter product price" },
-            })}
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input
             label="Quantity"
-            type="number"
+            type="text"
             errors={errors?.quantity?.message as string}
             register={register("quantity", {
               required: { value: true, message: "Enter product quantity" },
@@ -151,7 +172,7 @@ const AddProduct: React.FC = () => {
           />
           <Input
             label="Rating"
-            type="number"
+            type="text"
             errors={errors?.rating?.message as string}
             register={register("rating", {
               required: { value: true, message: "Enter product rating" },
@@ -161,7 +182,7 @@ const AddProduct: React.FC = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-3 rounded-lg text-lg font-medium hover:bg-blue-700 transition duration-300"
+          className="w-full bg-blue-600 text-white py-1 active:scale-95 cursor-pointer rounded-lg text-base font-medium hover:bg-blue-700 transition duration-300"
         >
           Add Product
         </button>

@@ -2,7 +2,7 @@ import Description from "../../ui/Description";
 
 const TestimonialContent = () => {
   return (
-    <div className="ml-[6vw] mr-[2vw]">
+    <div className="sm:ml-[3vw] ml-[6vw] mr-[2vw]">
       <Description
         title_1="What Our"
         title_2="Customers"

@@ -5,7 +5,7 @@ import DashBoard from "../layout/DashBoard";
 import ProtectedRoute from "../security/ProtectedRoute";
 import ViewDetails from "../pages/ViewDetails";
 import About from "../pages/About";
-import AllProducts from "../pages/AllProducts";
+// import AllProducts from "../pages/AllProducts";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import Home from "../pages/Home";
@@ -17,6 +17,7 @@ import ViewOrders from "../pages/ViewOrders";
 import ManageProfile from "../pages/ManageProfile";
 import DashboardProtectedRoute from "../security/DashboardProtectedRoute";
 import VerifyOrder from "../pages/VerifyOrder";
+import ProductsPage from "@/pages/All";
 
 const router = createBrowserRouter([
   {
@@ -42,19 +43,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/products",
-        element: (
-          <ProtectedRoute>
-            <AllProducts />
-          </ProtectedRoute>
-        ),
+        element: <ProductsPage />,
       },
       {
         path: "/product/:id",
-        element: (
-          <ProtectedRoute>
-            <ViewDetails />
-          </ProtectedRoute>
-        ),
+        element: <ViewDetails />,
       },
       {
         path: "/verify-order",

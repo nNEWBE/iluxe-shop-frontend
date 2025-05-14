@@ -17,7 +17,7 @@ import { ApiError } from "../error/error";
 interface DataType {
   _id: string;
   key: React.Key;
-  productImage: string;
+  productImages: string[];
   name: string;
   category: string;
   price: number;
@@ -30,6 +30,7 @@ const ManageProducts: React.FC = () => {
   const [deleteProduct] = useDeleteProductMutation(undefined);
   const { data, isFetching } = useGetAllProductsQuery(params);
   const cardData: Product[] = data?.data?.result;
+  console.log("🚀 ~ cardData:", cardData)
   const metaData = data?.data?.meta;
   const currentPage = parseInt(params.page) || 1;
 
@@ -70,12 +71,12 @@ const ManageProducts: React.FC = () => {
     },
     {
       title: "Image",
-      dataIndex: "productImage",
+      dataIndex: "productImages",
       rowScope: "row",
       render: (item) => (
         <img
           className="w-20 h-12 object-cover rounded-md border-2 border-secondary"
-          src={item}
+          src={item[0]}
         />
       ),
     },
@@ -148,10 +149,10 @@ const ManageProducts: React.FC = () => {
   ];
 
   const productData: DataType[] = cardData?.map(
-    ({ _id, productImage, name, category, price, inStock }, index) => ({
+    ({ _id, productImages, name, category, price, inStock }, index) => ({
       _id: _id,
       key: index + 1,
-      productImage,
+      productImages,
       name,
       category,
       price,
@@ -174,7 +175,7 @@ const ManageProducts: React.FC = () => {
           }}
         >
           <Pagination
-            pageSize={6}
+            pageSize={10}
             current={currentPage}
             defaultCurrent={1}
             total={metaData?.total || 0}

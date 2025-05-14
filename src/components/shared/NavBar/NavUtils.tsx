@@ -37,7 +37,7 @@ export type Product = {
   inStock: boolean;
   quantity: number;
   rating: number;
-  productImage: string;
+  productImages: string[];
   createdAt: string;
   updatedAt: string;
 };

@@ -12,8 +12,8 @@ const getItems: (panelStyle: CSSProperties) => CollapseProps["items"] = (
     label: "Uncompromising Quality",
     children: (
       <p className="border-2 border-secondary p-3 text-white rounded-xl bg-primary">
-        We source the finest paper, and materials to ensure a luxurious
-        feel and long-lasting durability.
+        We source the finest paper, and materials to ensure a luxurious feel and
+        long-lasting durability.
       </p>
     ),
     style: panelStyle,
@@ -21,22 +21,34 @@ const getItems: (panelStyle: CSSProperties) => CollapseProps["items"] = (
   {
     key: 2,
     label: "Timeless Design",
-    children:
-      <p className="border-2 border-secondary p-3 text-white rounded-xl bg-primary">Our stationery is crafted with a balance of modern aesthetics and classic elegance.</p>,
+    children: (
+      <p className="border-2 border-secondary p-3 text-white rounded-xl bg-primary">
+        Our stationery is crafted with a balance of modern aesthetics and
+        classic elegance.
+      </p>
+    ),
     style: panelStyle,
   },
   {
     key: 3,
     label: "Sustainable Commitment",
-    children:
-      <p className="border-2 border-secondary p-3 text-white rounded-xl bg-primary">We support eco-friendly practices, offering sustainable paper and packaging options.</p>,
+    children: (
+      <p className="border-2 border-secondary p-3 text-white rounded-xl bg-primary">
+        We support eco-friendly practices, offering sustainable paper and
+        packaging options.
+      </p>
+    ),
     style: panelStyle,
   },
   {
     key: 4,
     label: "Customer-Centric Approach",
-    children:
-      <p className="border-2 border-secondary p-3 text-white rounded-xl bg-primary">Your satisfaction is our priority, and we aim to provide an exceptional shopping experience.</p>,
+    children: (
+      <p className="border-2 border-secondary p-3 text-white rounded-xl bg-primary">
+        Your satisfaction is our priority, and we aim to provide an exceptional
+        shopping experience.
+      </p>
+    ),
     style: panelStyle,
   },
 ];
@@ -62,12 +74,13 @@ const Accordian: React.FC = () => {
       }}
     >
       <Collapse
+        accordion
         bordered={false}
         defaultActiveKey={["1"]}
         expandIcon={({ isActive }) => (
           <FaArrowCircleRight
             style={{
-              fontSize:'15px',
+              fontSize: "15px",
               color: "#1677ff",
               border: "2px solid #101828",
               borderRadius: "50%",

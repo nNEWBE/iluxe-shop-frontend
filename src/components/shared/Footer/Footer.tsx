@@ -23,7 +23,7 @@ const Footer = () => {
             <p className="text-gray-400 text-sm sm:text-lg mt-1">
               Join our newsletter for exclusive deals and creative inspiration!
             </p>
-            <div className="relative mt-4 z-1">
+            <div className="relative mt-4 max-w-md z-1">
               <input
                 type="email"
                 placeholder="Enter your email"

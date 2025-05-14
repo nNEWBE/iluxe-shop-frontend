@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 
 export type TUser = {
+    profileImage: string;
     userName: string;
     userId: string;
     role: string;
@@ -51,11 +52,24 @@ export const authSlice = createSlice({
         },
         removeRegisterUser: (state) => {
             state.defaultUser = null;
+        },
+        setUpdatedUser: (state, action) => {
+            const { name, profileImage } = action.payload;
+
+            if (state.user) {
+                if (name !== undefined) {
+                    state.user.userName = name;
+                }
+                if (profileImage !== undefined) {
+                    state.user.profileImage = profileImage;
+                }
+            }
         }
+
     }
 })
 
-export const { setUser, logoutUser, setUserAfterRegister, removeRegisterUser } = authSlice.actions;
+export const { setUser, logoutUser, setUserAfterRegister, removeRegisterUser, setUpdatedUser } = authSlice.actions;
 export default authSlice.reducer;
 
 export const useCurrentToken = (state: RootState) => state.auth.token;

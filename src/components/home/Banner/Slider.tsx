@@ -12,7 +12,7 @@ const Slider: React.FC = () => {
           <div key={image.key}>
             <div
               className={`w-full h-[400px] brightness-70 md:h-[500px] lg:h-[600px] bg-cover md:bg-contain  bg-center bg-transparent `}
-              style={{
+            style={{
                 height: "82vh",
                 color: "#fff",
                 lineHeight: "160px",

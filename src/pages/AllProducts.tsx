@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { FiFilter } from "react-icons/fi";
 import FeaturedProductsCard from "../components/home/FeaturedProducts/FeaturedProductsCard";
-import Button from "../components/ui/Button";
+import Button from "../components/ui/UiButton";
 import Title from "../components/ui/Title";
 import { useGetAllProductsQuery } from "../redux/api/product/productApi";
 import Filter from "../components/ui/Filter/Filter";
@@ -27,7 +27,6 @@ const AllProducts = () => {
   const { data, isLoading } = useGetAllProductsQuery(params, {
     refetchOnMountOrArgChange: true,
   });
-  console.log("🚀 ~ AllProducts ~ data:", data)
 
   const cardData = data?.data?.result;
   const metaData = data?.data?.meta;
@@ -47,21 +46,20 @@ const AllProducts = () => {
     }
   }, [isFilterOpen]);
 
-useEffect(() => {
-  const isLargeScreen = window.innerWidth >= 1024;
+  useEffect(() => {
+    const isLargeScreen = window.innerWidth >= 1024;
 
-  if (isFiltering) {
-    if (isLargeScreen) {
-      animateScroll.scrollToTop({
-        duration: 0,
-        smooth: "easeInOutQuint",
-      });
+    if (isFiltering) {
+      if (isLargeScreen) {
+        animateScroll.scrollToTop({
+          duration: 0,
+          smooth: "easeInOutQuint",
+        });
+      }
+
+      setTimeout(() => setIsFiltering(false), 1000);
     }
-
-    setTimeout(() => setIsFiltering(false), 1000);
-  }
-}, [isFiltering]);
-
+  }, [isFiltering]);
 
   const handleFilterChange = (key: string, value: string) => {
     setIsFiltering(true);

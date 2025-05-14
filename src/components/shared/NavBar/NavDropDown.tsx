@@ -101,15 +101,23 @@ const NavDropDown: React.FC = () => {
       ),
       key: user ? "2" : "0",
     },
-  ].filter(Boolean) as MenuProps["items"]; 
+  ].filter(Boolean) as MenuProps["items"];
 
   return (
     <Dropdown menu={{ items }} trigger={["click"]}>
       <div className="cursor-pointer">
         {user ? (
-          <p className="w-6 h-6 rounded-full border-2 border-secondary text-secondary bg-primary font-berkshire text-sm flex items-center justify-center">
-            {user?.userName?.charAt(0)}
-          </p>
+          user?.profileImage!=="N/A" ? (
+            <img
+              className="w-7 h-7 rounded-full border-2 border-secondary object-cover"
+              src={user?.profileImage}
+              alt={user?.userName}
+            />
+          ) : (
+            <p className="w-7 h-7 rounded-full border-2 border-secondary text-secondary bg-primary font-berkshire text-sm flex items-center justify-center">
+              {user?.userName.charAt(0).toUpperCase()}
+            </p>
+          )
         ) : (
           <FaCircleUser className="text-secondary text-2xl cursor-pointer" />
         )}

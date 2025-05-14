@@ -11,7 +11,7 @@ const Account: React.FC<Props> = ({ children, type, img }) => {
     <div className="mb-20 mt-12 flex items-center justify-center">
       <div
         data-aos="fade-left"
-        className="grid shadow-xl mx-5 overflow-hidden border-2 border-gray-300 grid-cols-1 lg:grid-cols-2 w-full max-w-screen-lg rounded-lg"
+        className="grid mx-5 overflow-hidden border-2 border-gray-300 grid-cols-1 lg:grid-cols-2 w-full max-w-screen-lg rounded-lg"
       >
         <div className="relative p-5">
           <img

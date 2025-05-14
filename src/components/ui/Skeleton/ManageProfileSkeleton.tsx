@@ -3,38 +3,43 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 const ManageProfileSkeleton = () => {
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <SkeletonTheme baseColor={"#101828"} highlightColor={"#42495e"}>
-        <div className="flex justify-center">
-          <Skeleton height={40} width={200} className="my-10" />
-        </div>
-        <div className="bg-white shadow-md border-2 border-secondary rounded-lg p-6">
-          <div className="flex flex-col gap-5 sm:flex-row items-center justify-between">
-            <div className="flex sm:text-start text-center flex-col sm:flex-row items-center gap-4 font-madimi text-gray-500">
-              <Skeleton circle width={96} height={96} />
-              <div>
-                <Skeleton height={30} width={110} className="mb-2" />
-                <Skeleton height={20} width={150} />
-                <div className="flex items-center sm:justify-start justify-center mt-2 gap-2">
-                  <Skeleton height={24} width={60} />
-                  <Skeleton height={24} width={60} />
+    <SkeletonTheme baseColor="#e5e5e5" highlightColor="#f5f5f5">
+      <div className="w-full overflow-x-auto">
+          <div className="bg-white border border-gray-300 rounded-lg p-6 mb-6">
+            <div className="flex gap-5 items-center justify-between">
+              <div className="flex text-start items-center gap-4 font-madimi text-gray-500">
+                <Skeleton circle width={96} height={96} />
+                <div>
+                  <h2 className="text-2xl text-secondary font-berkshire font-semibold mb-1">
+                    <Skeleton width={150} />
+                  </h2>
+                  <p>
+                    <Skeleton width={120} />
+                  </p>
+                  <div className="flex items-center justify-start mt-1 gap-2">
+                    <Skeleton width={60} height={24} />
+                    <Skeleton width={60} height={24} />
+                  </div>
                 </div>
               </div>
+              <Skeleton width={40} height={40} />
             </div>
-            <Skeleton height={20} width={50} />
+          </div>
+          <div className="bg-white border border-gray-300 rounded-lg font-madimi p-6">
+            <h3 className="text-lg font-semibold mb-4 font-berkshire">
+              <Skeleton width={180} />
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              {[...Array(4)].map((_, idx) => (
+                <div key={idx} className="flex gap-2">
+                  <Skeleton width={60} />
+                  <Skeleton width={120} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-        <div className="bg-white shadow-md border-2 border-secondary rounded-lg font-madimi p-6 mt-6">
-          <Skeleton height={25} width={200} className="mb-4" />
-          <div className="grid sm:grid-cols-2 sm:gap-4 gap-1">
-            <Skeleton height={20} width={150} />
-            <Skeleton height={20} width={150} />
-            <Skeleton height={20} width={150} />
-            <Skeleton height={20} width={150} />
-          </div>
-        </div>
-      </SkeletonTheme>
-    </div>
+    </SkeletonTheme>
   );
 };
 

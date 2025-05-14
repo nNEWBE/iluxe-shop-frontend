@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import Button from "../components/ui/Button";
+import Button from "../components/ui/UiButton";
 import { IoLogIn } from "react-icons/io5";
 import Input from "../components/ui/Input/Input";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
@@ -33,7 +33,7 @@ const Login = () => {
     defaultValues: {
       email: defaultUser?.email,
       password: defaultUser?.password,
-    }
+    },
   });
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
@@ -46,7 +46,65 @@ const Login = () => {
       reset();
       toast.success("Logged in successfully", { id: toastId, duration: 2000 });
 
-      navigate(location?.state?location.state?.from : "/");
+      navigate(location?.state ? location.state?.from : "/");
+    } catch (error: unknown) {
+      if (typeof error === "object" && error !== null && "data" in error) {
+        const apiError = error as ApiError;
+        toast.error(
+          apiError?.data?.error?.details?.[0]?.message ||
+            "Something went wrong",
+          {
+            id: toastId,
+            duration: 2000,
+          }
+        );
+      } else {
+        toast.error("Something went wrong", { id: toastId, duration: 2000 });
+      }
+    }
+  };
+
+  const handleAdminLogin = async() => {
+    
+    const toastId = toast.loading("Logging in");
+    try {
+      const res = await login({email:"admin@gmail.com",password:"admin1234"}).unwrap();
+      const user = verifyToken(res?.data?.token?.accessToken) as TUser;
+      dispatch(setUser({ user: user, token: res?.data?.token?.accessToken }));
+      dispatch(removeRegisterUser());
+      reset();
+      toast.success("Logged in successfully", { id: toastId, duration: 2000 });
+
+      navigate(location?.state ? location.state?.from : "/");
+    } catch (error: unknown) {
+      if (typeof error === "object" && error !== null && "data" in error) {
+        const apiError = error as ApiError;
+        toast.error(
+          apiError?.data?.error?.details?.[0]?.message ||
+            "Something went wrong",
+          {
+            id: toastId,
+            duration: 2000,
+          }
+        );
+      } else {
+        toast.error("Something went wrong", { id: toastId, duration: 2000 });
+      }
+    }
+  };
+
+  const handleUserLogin = async() => {
+    
+    const toastId = toast.loading("Logging in");
+    try {
+      const res = await login({email:"shuvo@gmail.com",password:"shuvo1234"}).unwrap();
+      const user = verifyToken(res?.data?.token?.accessToken) as TUser;
+      dispatch(setUser({ user: user, token: res?.data?.token?.accessToken }));
+      dispatch(removeRegisterUser());
+      reset();
+      toast.success("Logged in successfully", { id: toastId, duration: 2000 });
+
+      navigate(location?.state ? location.state?.from : "/");
     } catch (error: unknown) {
       if (typeof error === "object" && error !== null && "data" in error) {
         const apiError = error as ApiError;
@@ -103,7 +161,11 @@ const Login = () => {
             },
           })}
         />
-        <Button text="Login" icon={<IoLogIn />} />
+        <div className=" flex gap-4 flex-wrap">
+          <Button text="Login" icon={<IoLogIn />} />
+          <Button isSubmit={false} onClick={handleAdminLogin} text="Admin" icon={<IoLogIn />} />
+          <Button isSubmit={false} onClick={handleUserLogin} text="User" icon={<IoLogIn />} />
+        </div>
       </form>
     </Account>
   );

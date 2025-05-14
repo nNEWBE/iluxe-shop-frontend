@@ -1,8 +1,24 @@
 import { useEffect, useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+
+type SearchFormInputs = {
+  search: string;
+};
 
 const SliderContent = () => {
   const [placeholder, setPlaceholder] = useState("Search for products");
+   const navigate = useNavigate();
+  
+    const handleSearchQuery = (key: string, value: string | number) => {
+      const params = new URLSearchParams(location.search);
+      params.set(key, value.toString());
+      navigate(`products?${params.toString()}`);
+    };
+  
+
+  const { register, handleSubmit, reset } = useForm<SearchFormInputs>();
 
   useEffect(() => {
     const handleResize = () => {
@@ -13,7 +29,7 @@ const SliderContent = () => {
       }
     };
 
-    handleResize();
+    handleResize(); // set on first render
     window.addEventListener("resize", handleResize);
 
     return () => {
@@ -21,9 +37,12 @@ const SliderContent = () => {
     };
   }, []);
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = (data: SearchFormInputs) => {
+    console.log("Search Query:", data.search);
+    handleSearchQuery("search", data.search);
+    reset();
   };
+
   return (
     <div
       data-aos="zoom-in-up"
@@ -42,21 +61,25 @@ const SliderContent = () => {
       </div>
       <div>
         <form
-          onSubmit={handleFormSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           className="flex flex-row sm:gap-[3px] justify-center items-center text-base"
         >
           <input
+            {...register("search", { required: true })}
             className="border sm:block border-secondary w-[70%] sm:w-1/2 placeholder:text-secondary px-4 sm:py-1 py-1 bg-gray-300 font-madimi rounded-l-2xl sm:rounded-r-[4px] focus:outline-none sm:text-base text-sm"
             type="text"
             placeholder={placeholder}
           />
           <div className="flex text-white items-center relative">
-            <div className="bg-primary rounded-r-2xl flex items-center justify-center h-[29.5px] border border-secondary sm:border-0 sm:w-0 w-10">
-              <IoSearchSharp className="text-lg cursor-pointer sm:absolute left-3" />
-            </div>
             <button
-              className="border sm:block hidden border-secondary sm:text-base text-sm cursor-pointer sm:py-1 pl-9 pr-4 py-1 bg-primary font-madimi rounded-r-2xl sm:rounded-l-[4px]"
               type="submit"
+              className="bg-primary rounded-r-2xl flex items-center justify-center h-[29.5px] border border-secondary sm:border-0 sm:w-0 w-10"
+            >
+              <IoSearchSharp className="text-lg cursor-pointer sm:absolute left-3" />
+            </button>
+            <button
+              type="submit"
+              className="border sm:block hidden border-secondary sm:text-base text-sm cursor-pointer sm:py-1 pl-9 pr-4 py-1 bg-primary font-madimi rounded-r-2xl sm:rounded-l-[4px]"
             >
               Search
             </button>

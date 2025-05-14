@@ -9,9 +9,9 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "../../../styles/style.css";
 import { PaginationOptions } from "swiper/types";
-import { Rating } from "@fluentui/react-components";
 import TestimonialBg from "./TestimonialBg";
 import { testimonials } from "./TestimonialUtils";
+import { Rate } from "antd";
 
 const TestimonialSlider = () => {
   const pagination: PaginationOptions = {
@@ -36,7 +36,7 @@ const TestimonialSlider = () => {
       >
         {testimonials.map((testimonial) => (
           <SwiperSlide key={testimonial.key}>
-            <div className="flex gap-4 border-[1px] border-secondary flex-col sm:flex-row h-full shadow-xl bg-white items-center px-5 sm:w-[82%] rounded-xl mx-auto border-t-8 border-t-primary sm:border-t-[1px] sm:border-t-secondary sm:border-x-8 sm:border-x-primary pb-16 pt-5 sm:pt-0 md:pb-5 sm:pb-5">
+            <div className="flex gap-4 border border-gray-300 flex-col sm:flex-row h-full shadow-xl bg-white items-center px-5 sm:w-[82%] rounded-xl mx-auto border-t-8 border-t-primary sm:border-t sm:border-t-gray-300 sm:border-l-8 sm:border-l-primary pb-16 pt-5 sm:pt-0 md:pb-5 sm:pb-5">
               <img
                 className="sm:size-28 size-20 rounded-full"
                 src={testimonial.userImage}
@@ -46,13 +46,14 @@ const TestimonialSlider = () => {
                 <h1 className="sm:text-xl text-lg font-berkshire">
                   {testimonial.username}
                 </h1>
-                <Rating
-                  size="large"
-                  step={0.5}
-                  color="marigold"
-                  value={testimonial.rating}
-                  className="pointer-events-none my-2"
+
+                <Rate
+                  style={{ fontSize: "17px", color: "#eaa300" }}
+                  allowHalf
+                  disabled
+                  defaultValue={testimonial?.rating}
                 />
+
                 <p className="sm:text-base text-sm font-madimi">
                   {testimonial.description}
                 </p>
